@@ -132,7 +132,7 @@ while [ $# -ge 1 ]; do
 		librarypath="`echo ${1:15} | tr ',;' '  '`" ;;
 
 	--cflags=*)
-		cflags="${1:9}" ;;
+		flags="`echo ${1} | awk '{print substr($0,10)}'`" ;;
 
 	--no-samples)
 		samples="" ;;

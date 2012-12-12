@@ -86,19 +86,6 @@ Release 1.4.6p1 (2013-03-06)
 Release 1.4.6 (2013-01-10)
 ==========================
 
-- changed FPEnvironment_DUMMY.h to include <cmath> instead of <math.h>
-- updated bundled SQLite to 3.7.15.1
-- fixed GH# 30: Poco::Path::home() throws
-- fixed SF Patch# 120 The ExpireLRUCache does not compile with a tuple as key on VS2010
-- fixed SF# 603 count() is missing in HashMap
-- Crypto and NetSSL_OpenSSL project files now use OpenSSL *MD.lib library files for 
-  static_md builds. Previously, the DLL import libs were used.
-- Poco::Environment::osDisplayName() now recognizes Windows 8/Server 2012
-
-
-Release 1.4.5 (2012-11-19)
-==========================
-
 - added Visual Studio 2012 project files
 - buildwin.cmd now support building with msbuild for VS2010 and 2012.
 - added Poco::Optional class
