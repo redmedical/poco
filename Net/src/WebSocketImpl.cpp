@@ -115,6 +115,94 @@ int WebSocketImpl::sendBytes(const void* buffer, int length, int flags)
 	return length;
 }
 
+
+int WebSocketImpl::receiveBytes(std::string &buffer, int )
+{
+    char header[MAX_HEADER_LENGTH];
+    int n = receiveNBytes(header, 2);
+    if (n <= 0)
+    {
+        _frameFlags = 0;
+        return n;
+    }
+    poco_assert (n == 2);
+    Poco::UInt8 lengthByte = static_cast<Poco::UInt8>(header[1]);
+    int maskOffset = 0;
+    if (lengthByte & FRAME_FLAG_MASK) maskOffset += 4;
+    lengthByte &= 0x7f;
+	if (lengthByte > 0 || maskOffset > 0)
+	{
+		if (lengthByte + 2 + maskOffset < MAX_HEADER_LENGTH)
+		{
+			n = receiveNBytes(header + 2, lengthByte + maskOffset);
+		}
+		else
+		{
+			n = receiveNBytes(header + 2, MAX_HEADER_LENGTH - 2);
+		}
+		if (n <= 0) throw WebSocketException("Incomplete header received", WebSocket::WS_ERR_INCOMPLETE_FRAME);
+		n += 2;
+	}
+    Poco::MemoryInputStream istr(header, n);
+    Poco::BinaryReader reader(istr, Poco::BinaryReader::NETWORK_BYTE_ORDER);
+    Poco::UInt8 flags;
+    char mask[4];
+    reader >> flags >> lengthByte;
+    _frameFlags = flags;
+    int payloadLength = 0;
+    int payloadOffset = 2;
+    if ((lengthByte & 0x7f) == 127)
+    {
+        Poco::UInt64 l;
+        reader >> l;
+        payloadLength = static_cast<int>(l);
+        payloadOffset += 8;
+    }
+    else if ((lengthByte & 0x7f) == 126)
+    {
+        Poco::UInt16 l;
+        reader >> l;
+        payloadLength = static_cast<int>(l);
+        payloadOffset += 2;
+    }
+    else
+    {
+        Poco::UInt8 l = lengthByte & 0x7f;
+        payloadLength = static_cast<int>(l);
+    }
+    if (lengthByte & FRAME_FLAG_MASK)
+    {
+        reader.readRaw(mask, 4);
+        payloadOffset += 4;
+    }
+    int received = 0;
+
+    buffer.resize(payloadLength);
+    if (payloadOffset < n)
+    {
+
+        received = n - payloadOffset;
+        std::memcpy( &buffer[0], header + payloadOffset, received );
+
+    }
+    if (received < payloadLength)
+    {
+        n = receiveNBytes(reinterpret_cast<char*>(&buffer[0]) + received, payloadLength - received);
+        if (n <= 0) throw WebSocketException("Incomplete frame received", WebSocket::WS_ERR_INCOMPLETE_FRAME);
+        received += n;
+    }
+    if (received>0  && (lengthByte & FRAME_FLAG_MASK))
+    {
+        char* p = &buffer[0];
+        for (int i = 0; i < received; i++)
+        {
+            p[i] ^= mask[i % 4];
+        }
+    }
+    return received;
+
+}
+
 	
 int WebSocketImpl::receiveBytes(void* buffer, int length, int)
 {
@@ -130,18 +218,20 @@ int WebSocketImpl::receiveBytes(void* buffer, int length, int)
 	int maskOffset = 0;
 	if (lengthByte & FRAME_FLAG_MASK) maskOffset += 4;
 	lengthByte &= 0x7f;
-	if (lengthByte + 2 + maskOffset < MAX_HEADER_LENGTH)
-	{
-		n = receiveNBytes(header + 2, lengthByte + maskOffset);
-	}
-	else
-	{
-		n = receiveNBytes(header + 2, MAX_HEADER_LENGTH - 2);
-	}
 
-	if (n <= 0) throw WebSocketException("Incomplete frame received", WebSocket::WS_ERR_INCOMPLETE_FRAME);
-
-	n += 2;
+	if (lengthByte > 0 || maskOffset > 0)
+	{
+		if (lengthByte + 2 + maskOffset < MAX_HEADER_LENGTH)
+		{
+			n = receiveNBytes(header + 2, lengthByte + maskOffset);
+		}
+		else
+		{
+			n = receiveNBytes(header + 2, MAX_HEADER_LENGTH - 2);
+		}
+		if (n <= 0) throw WebSocketException("Incomplete header received", WebSocket::WS_ERR_INCOMPLETE_FRAME);
+		n += 2;
+	}
 	Poco::MemoryInputStream istr(header, n);
 	Poco::BinaryReader reader(istr, Poco::BinaryReader::NETWORK_BYTE_ORDER);
 	Poco::UInt8 flags;

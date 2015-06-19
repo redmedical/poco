@@ -60,6 +60,8 @@ public:
 	virtual int sendBytes(const void* buffer, int length, int flags);
 		/// Sends a WebSocket protocol frame.
 		
+
+	virtual int receiveBytes(std::string &buffer, int flags);
 	virtual int receiveBytes(void* buffer, int length, int flags);
 		/// Receives a WebSocket protocol frame.
 		
