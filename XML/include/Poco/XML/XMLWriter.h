@@ -353,6 +353,7 @@ private:
 	std::string      _indent;
 
 	static const std::string MARKUP_QUOTENC;
+	static const std::string MARKUP_APOSENC;
 	static const std::string MARKUP_AMPENC;
 	static const std::string MARKUP_LTENC;
 	static const std::string MARKUP_GTENC;
