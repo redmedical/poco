@@ -337,6 +337,9 @@ void Context::createSSLContext()
 		case SERVER_USE:
 			_pSSLContext = SSL_CTX_new(SSLv23_server_method());
 			break;
+		case SSLV3_CLIENT_USE:
+			_pSSLContext = SSL_CTX_new(SSLv3_client_method());
+			break;
 		case TLSV1_CLIENT_USE:
 			_pSSLContext = SSL_CTX_new(TLSv1_client_method());
 			break;
