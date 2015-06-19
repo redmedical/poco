@@ -137,6 +137,12 @@ ProcessHandle::PID ProcessHandle::id() const
 	return _pImpl->id();
 }
 
+#if defined(_WIN32)
+HANDLE ProcessHandle::process() const
+{
+	return _pImpl->process();
+}
+#endif
 	
 int ProcessHandle::wait() const
 {

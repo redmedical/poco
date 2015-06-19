@@ -87,6 +87,10 @@ public:
 		
 	PID id() const;
 		/// Returns the process ID.
+
+#if defined(_WIN32)
+	HANDLE process() const;
+#endif
 		
 	int wait() const;
 		/// Waits for the process to terminate
