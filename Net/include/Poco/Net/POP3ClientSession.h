@@ -191,6 +191,8 @@ public:
 		///
 		/// Throws a POP3Exception in case of a POP3-specific error, or a
 		/// NetException in case of a general network communication failure.
+		
+	DialogSocket getSocket();
 
 protected:
 	static bool isPositive(const std::string& response);
