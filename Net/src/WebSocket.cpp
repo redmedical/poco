@@ -124,6 +124,13 @@ int WebSocket::sendFrame(const void* buffer, int length, int flags)
 	return static_cast<WebSocketImpl*>(impl())->sendBytes(buffer, length, flags);
 }
 
+int WebSocket::receiveFrame(std::string &buffer, int &flags)
+{
+    int n = static_cast<WebSocketImpl*>(impl())->receiveBytes(buffer, 0);
+    flags = static_cast<WebSocketImpl*>(impl())->frameFlags();
+    return n;
+}
+
 
 int WebSocket::receiveFrame(void* buffer, int length, int& flags)
 {

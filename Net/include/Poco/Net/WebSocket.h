@@ -222,6 +222,7 @@ public:
 		/// Certain socket implementations may also return a negative
 		/// value denoting a certain condition.
 
+	int receiveFrame(std::string &buffer, int& flags);
 	int receiveFrame(void* buffer, int length, int& flags);
 		/// Receives a frame from the socket and stores it
 		/// in buffer. Up to length bytes are received. If
