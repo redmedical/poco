@@ -106,6 +106,9 @@ public:
 		///
 		/// Returns true if the STARTTLS command was successful,
 		/// false otherwise.
+		
+private:
+	std::string _host;
 };
 
 
