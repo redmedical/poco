@@ -171,7 +171,8 @@ public:
 		const std::string& initialDirectory,
 		Pipe* inPipe, 
 		Pipe* outPipe, 
-		Pipe* errPipe);
+		Pipe* errPipe,
+		DWORD creationFlags);
 		/// Creates a new process for the given command and returns
 		/// a ProcessHandle of the new process. The given arguments are
 		/// passed to the command on the command line.

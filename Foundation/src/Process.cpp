@@ -151,7 +151,7 @@ ProcessHandle Process::launch(const std::string& command, const Args& args)
 {
 	std::string initialDirectory;
 	Env env;
-	return ProcessHandle(launchImpl(command, args, initialDirectory, 0, 0, 0, env));
+	return ProcessHandle(launchImpl(command, args, initialDirectory, 0, 0, 0, env, 0));
 }
 
 
@@ -171,11 +171,11 @@ ProcessHandle Process::launch(const std::string& command, const Args& args, Pipe
 }
 
 
-ProcessHandle Process::launch(const std::string& command, const Args& args, const std::string& initialDirectory, Pipe* inPipe, Pipe* outPipe, Pipe* errPipe)
+ProcessHandle Process::launch(const std::string& command, const Args& args, const std::string& initialDirectory, Pipe* inPipe, Pipe* outPipe, Pipe* errPipe, DWORD creationFlags)
 {
 	poco_assert (inPipe == 0 || (inPipe != outPipe && inPipe != errPipe));
 	Env env;
-	return ProcessHandle(launchImpl(command, args, initialDirectory, inPipe, outPipe, errPipe, env));
+	return ProcessHandle(launchImpl(command, args, initialDirectory, inPipe, outPipe, errPipe, env, creationFlags));
 }
 
 

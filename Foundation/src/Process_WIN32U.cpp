@@ -120,7 +120,7 @@ void ProcessImpl::timesImpl(long& userTime, long& kernelTime)
 }
 
 
-ProcessHandleImpl* ProcessImpl::launchImpl(const std::string& command, const ArgsImpl& args, const std::string& initialDirectory, Pipe* inPipe, Pipe* outPipe, Pipe* errPipe, const EnvImpl& env)
+ProcessHandleImpl* ProcessImpl::launchImpl(const std::string& command, const ArgsImpl& args, const std::string& initialDirectory, Pipe* inPipe, Pipe* outPipe, Pipe* errPipe, const EnvImpl& env, DWORD creationFlags) //ummisoft
 {
 	std::string commandLine = command;
 	for (ArgsImpl::const_iterator it = args.begin(); it != args.end(); ++it)
@@ -209,7 +209,7 @@ ProcessHandleImpl* ProcessImpl::launchImpl(const std::string& command, const Arg
 	}
 		
 	PROCESS_INFORMATION processInfo;
-	DWORD creationFlags = GetConsoleWindow() ? 0 : CREATE_NO_WINDOW;
+	if(!creationFlags) creationFlags = GetConsoleWindow() ? 0 : CREATE_NO_WINDOW;
 	BOOL rc = CreateProcessW(
 		NULL, // applicationName
 		const_cast<wchar_t*>(ucommandLine.c_str()), 

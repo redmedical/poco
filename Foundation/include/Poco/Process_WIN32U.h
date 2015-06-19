@@ -88,7 +88,8 @@ public:
 		Pipe* inPipe, 
 		Pipe* outPipe, 
 		Pipe* errPipe,
-		const EnvImpl& env);
+		const EnvImpl& env,
+		DWORD creationFlags = 0);
 	static void killImpl(const ProcessHandleImpl& handle);
 	static void killImpl(PIDImpl pid);
 	static void requestTerminationImpl(PIDImpl pid);
