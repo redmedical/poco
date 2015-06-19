@@ -116,6 +116,7 @@ void SecureSocketImpl::acceptSSL()
 		BIO_free(pBIO);
 		throw SSLException("Cannot create SSL object");
 	}
+	SSL_set_mode( _pSSL, SSL_MODE_ENABLE_PARTIAL_WRITE | SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER ); //17.04.2015 13:57:06
 	SSL_set_bio(_pSSL, pBIO, pBIO);
 	SSL_set_accept_state(_pSSL);
 	_needHandshake = true;
@@ -176,6 +177,7 @@ void SecureSocketImpl::connectSSL(bool performHandshake)
 		BIO_free(pBIO);
 		throw SSLException("Cannot create SSL object");
 	}
+	SSL_set_mode( _pSSL, SSL_MODE_ENABLE_PARTIAL_WRITE | SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER ); //17.04.2015 13:57:06
 	SSL_set_bio(_pSSL, pBIO, pBIO);
 	
 #if OPENSSL_VERSION_NUMBER >= 0x0908060L && !defined(OPENSSL_NO_TLSEXT)
