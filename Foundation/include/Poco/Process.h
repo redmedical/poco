@@ -175,8 +175,11 @@ public:
 		const std::string& initialDirectory,
 		Pipe* inPipe, 
 		Pipe* outPipe, 
-		Pipe* errPipe,
-		DWORD creationFlags);
+        Pipe* errPipe
+#if defined(_WIN32)
+        , DWORD creationFlags
+#endif
+        );
 		/// Creates a new process for the given command and returns
 		/// a ProcessHandle of the new process. The given arguments are
 		/// passed to the command on the command line.
