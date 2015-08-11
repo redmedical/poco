@@ -1,7 +1,6 @@
 
-include(../common.pri)
-
 TARGET = PocoFoundationmd
+include(../common.pri)
 
 DEFINES += PCRE_STATIC
 

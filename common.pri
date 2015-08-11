@@ -5,6 +5,11 @@ CONFIG += staticlib
 DEFINES += POCO_STATIC
 
 
+CONFIG(debug, debug|release) {
+     mac: TARGET = $$join(TARGET,,,_debug)
+     win32: TARGET = $$join(TARGET,,,d)
+}
+
 INCLUDEPATH += ./include \
     ./../Foundation/include
 

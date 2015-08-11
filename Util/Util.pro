@@ -1,7 +1,6 @@
 
-include(../common.pri)
-
 TARGET = PocoUtilmd
+include(../common.pri)
 
 INCLUDEPATH += \
     ./../XML/include

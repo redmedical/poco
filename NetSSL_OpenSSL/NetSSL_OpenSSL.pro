@@ -1,7 +1,7 @@
 
+TARGET = PocoNetSSLmd
 include(../common.pri)
 
-TARGET = PocoNetSSLmd
 INCLUDEPATH += \
     ./../Net/include \
     ./../Util/include \
