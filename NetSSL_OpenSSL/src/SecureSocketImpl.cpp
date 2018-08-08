@@ -452,17 +452,25 @@ int SecureSocketImpl::handleError(int rc)
 	default:
 		{
 			long lastError = ERR_get_error();
-			if (lastError == 0)
-			{
-				if (rc == 0 || rc == -1)
-				{
-					throw SSLConnectionUnexpectedlyClosedException();
-				}
-				else
-				{
-					SecureStreamSocketImpl::error(Poco::format("The BIO reported an error: %d", rc));
-				}
-			}
+            if (lastError == 0)
+            {
+                if (rc == 0)
+                {
+                    // Most web browsers do this, don't report an error
+                    if (_pContext->isForServerUse())
+                        return 0;
+                    else
+                        throw SSLConnectionUnexpectedlyClosedException();
+                }
+                else if (rc == -1)
+                {
+                    throw SSLConnectionUnexpectedlyClosedException();
+                }
+                else
+                {
+                    SecureStreamSocketImpl::error(Poco::format("The BIO reported an error: %d", rc));
+                }
+            }
 			else
 			{
 				char buffer[256];
