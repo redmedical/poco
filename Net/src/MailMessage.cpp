@@ -227,6 +227,11 @@ void MailMessage::addPart(const std::string& name, PartSource* pSource, ContentD
 }
 
 
+void MailMessage::addContent(PartSource* pSource, ContentDisposition disp, ContentTransferEncoding encoding)
+{
+    addPart("", pSource, disp, encoding);
+}
+
 void MailMessage::addContent(PartSource* pSource, ContentTransferEncoding encoding)
 {
 	addPart("", pSource, CONTENT_INLINE, encoding);
@@ -332,9 +337,12 @@ void MailMessage::writePart(MultipartWriter& writer, const Part& part) const
 			disposition.append("; filename=");
 			quote(filename, disposition);
 		}
+        partHeader.set(HEADER_CONTENT_DISPOSITION, disposition);
 	}
-	else disposition = "inline";
-	partHeader.set(HEADER_CONTENT_DISPOSITION, disposition);
+    else if (part.disposition == CONTENT_INLINE)
+    {
+        partHeader.set(HEADER_CONTENT_DISPOSITION, "inline");
+    }
 	writer.nextPart(partHeader);
 	writeEncoded(part.pSource->stream(), writer.stream(), part.encoding);
 }
