@@ -75,7 +75,8 @@ public:
 	enum ContentDisposition
 	{
 		CONTENT_INLINE,
-		CONTENT_ATTACHMENT
+		CONTENT_ATTACHMENT,
+        CONTENT_NO_IDENTIFIER
 	};
 	
 	enum ContentTransferEncoding
@@ -174,6 +175,9 @@ public:
 		/// must not contain any non-ASCII characters.
 		/// To include non-ASCII characters in the part name or filename, 
 		/// use RFC 2047 word encoding (see encodeWord()).
+
+    void addContent(PartSource* pSource, ContentDisposition disp,
+        ContentTransferEncoding encoding = ENCODING_QUOTED_PRINTABLE);
 
 	void addContent(PartSource* pSource, ContentTransferEncoding encoding = ENCODING_QUOTED_PRINTABLE);
 		/// Adds a part to the mail message by calling
